@@ -1,0 +1,367 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cue Master - Snooker Scorekeeper</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .ball-shadow { box-shadow: inset -4px -4px 8px rgba(0,0,0,0.4), 0 4px 10px rgba(0,0,0,0.3); }
+        .active-glow { box-shadow: 0 0 20px rgba(34, 197, 94, 0.3); }
+    </style>
+</head>
+<body class="bg-zinc-950 text-slate-100 min-h-screen">
+
+    <!-- SETUP SCREEN -->
+    <div id="setup-screen" class="fixed inset-0 z-50 flex items-center justify-center p-6 bg-zinc-950">
+        <div class="w-full max-w-sm bg-zinc-900 rounded-3xl p-8 border border-zinc-800 shadow-2xl">
+            <div class="bg-green-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>
+            </div>
+            <h1 class="text-3xl font-black text-center mb-8 tracking-tight">CUE MASTER</h1>
+            
+            <div class="space-y-6">
+                <div>
+                    <label class="text-[10px] text-zinc-500 uppercase font-bold tracking-widest block mb-3 text-center">Format</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="setFormat(15)" id="btn-15" class="py-4 rounded-2xl font-bold transition-all border-2 bg-zinc-800 border-green-500 text-white">15 REDS</button>
+                        <button onclick="setFormat(10)" id="btn-10" class="py-4 rounded-2xl font-bold transition-all border-2 bg-zinc-900/50 border-zinc-800 text-zinc-500">10 REDS</button>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <input type="text" id="p1-input" placeholder="Player 1" class="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-green-500" value="Player 1">
+                    <input type="text" id="p2-input" placeholder="Player 2" class="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-green-500" value="Player 2">
+                </div>
+
+                <button onclick="startGame()" class="w-full bg-green-600 hover:bg-green-500 py-4 rounded-2xl font-black text-lg tracking-wide shadow-lg transition-all active:scale-95">
+                    START MATCH
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN GAME INTERFACE -->
+    <div id="game-screen" class="hidden max-w-2xl mx-auto p-4 flex flex-col min-h-screen">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-6">
+            <div class="flex items-center gap-2">
+                <div class="bg-green-600 p-2 rounded-lg"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg></div>
+                <span id="format-display" class="font-bold text-xs text-zinc-400 uppercase tracking-widest"></span>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="location.reload()" class="p-2 hover:bg-zinc-800 rounded-full"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-500"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg></button>
+                <button onclick="handleUndo()" class="p-2 hover:bg-zinc-800 rounded-full"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-500"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg></button>
+                <button onclick="resetFrame()" class="p-2 hover:bg-zinc-800 rounded-full"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-500/70"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M3 21v-5h5"></path></svg></button>
+            </div>
+        </header>
+
+        <!-- Scoreboard -->
+        <div class="grid grid-cols-2 gap-4 mb-8">
+            <div id="p1-card" class="p-6 rounded-3xl border-2 transition-all bg-zinc-900 border-green-500 active-glow cursor-pointer" onclick="setActivePlayer(0)">
+                <div class="flex justify-between items-start mb-2 overflow-hidden">
+                    <span id="p1-name-display" class="text-[10px] font-bold uppercase tracking-widest text-zinc-500 truncate"></span>
+                    <div id="p1-frames" class="flex gap-1"></div>
+                </div>
+                <div id="p1-score" class="text-6xl font-black tracking-tighter tabular-nums">0</div>
+                <div id="p1-break" class="mt-2 text-xs font-black text-green-400 uppercase hidden animate-pulse">Break: 0</div>
+            </div>
+            <div id="p2-card" class="p-6 rounded-3xl border-2 transition-all bg-zinc-900/50 border-zinc-800 opacity-60 cursor-pointer" onclick="setActivePlayer(1)">
+                <div class="flex justify-between items-start mb-2 overflow-hidden">
+                    <span id="p2-name-display" class="text-[10px] font-bold uppercase tracking-widest text-zinc-500 truncate"></span>
+                    <div id="p2-frames" class="flex gap-1"></div>
+                </div>
+                <div id="p2-score" class="text-6xl font-black tracking-tighter tabular-nums">0</div>
+                <div id="p2-break" class="mt-2 text-xs font-black text-green-400 uppercase hidden animate-pulse">Break: 0</div>
+            </div>
+        </div>
+
+        <!-- Table Info -->
+        <div class="bg-zinc-900/80 rounded-2xl p-5 mb-8 flex justify-between items-center border border-zinc-800/50">
+            <div class="flex flex-col">
+                <span class="text-[10px] text-zinc-500 uppercase font-bold tracking-widest mb-1">Reds</span>
+                <span id="reds-count" class="text-2xl font-black text-red-500">0</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <span class="text-[10px] text-zinc-500 uppercase font-bold tracking-widest mb-1">On Table</span>
+                <span id="pts-table" class="text-2xl font-black text-white">0</span>
+            </div>
+            <div class="flex flex-col items-end">
+                <span class="text-[10px] text-zinc-500 uppercase font-bold tracking-widest mb-1">Target</span>
+                <span id="target-ball" class="text-2xl font-black text-yellow-500 uppercase">RED</span>
+            </div>
+        </div>
+
+        <!-- Balls Grid -->
+        <div class="grid grid-cols-4 sm:grid-cols-7 gap-3 sm:gap-4 mb-12">
+            <button onclick="handlePot('red')" id="ball-red" class="ball-shadow bg-red-600 w-full aspect-square rounded-full flex items-center justify-center font-bold text-white text-xl border-4 border-white/10 active:scale-90 transition-transform">1</button>
+            <button onclick="handlePot('yellow')" id="ball-yellow" class="ball-shadow bg-yellow-400 w-full aspect-square rounded-full flex items-center justify-center font-bold text-zinc-900 text-xl border-4 border-white/10 active:scale-90 transition-transform">2</button>
+            <button onclick="handlePot('green')" id="ball-green" class="ball-shadow bg-green-600 w-full aspect-square rounded-full flex items-center justify-center font-bold text-white text-xl border-4 border-white/10 active:scale-90 transition-transform">3</button>
+            <button onclick="handlePot('brown')" id="ball-brown" class="ball-shadow bg-amber-800 w-full aspect-square rounded-full flex items-center justify-center font-bold text-white text-xl border-4 border-white/10 active:scale-90 transition-transform">4</button>
+            <button onclick="handlePot('blue')" id="ball-blue" class="ball-shadow bg-blue-600 w-full aspect-square rounded-full flex items-center justify-center font-bold text-white text-xl border-4 border-white/10 active:scale-90 transition-transform">5</button>
+            <button onclick="handlePot('pink')" id="ball-pink" class="ball-shadow bg-pink-400 w-full aspect-square rounded-full flex items-center justify-center font-bold text-white text-xl border-4 border-white/10 active:scale-90 transition-transform">6</button>
+            <button onclick="handlePot('black')" id="ball-black" class="ball-shadow bg-zinc-900 w-full aspect-square rounded-full flex items-center justify-center font-bold text-white text-xl border-4 border-white/10 active:scale-90 transition-transform">7</button>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="grid grid-cols-3 gap-4 w-full">
+            <button onclick="handleMiss()" class="flex flex-col items-center justify-center bg-zinc-800/80 py-5 rounded-2xl border border-zinc-700/50 active:scale-95 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-1 text-zinc-400"><path d="m15 18-6-6 6-6"></path></svg>
+                <span class="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Miss</span>
+            </button>
+            <button onclick="toggleFoulMenu(true)" class="flex flex-col items-center justify-center bg-red-900/10 py-5 rounded-2xl border border-red-900/30 active:scale-95 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-1 text-red-500"><circle cx="12" cy="12" r="10"></circle><line x1="12" x2="12" y1="8" y2="12"></line><line x1="12" x2="12.01" y1="16" y2="16"></line></svg>
+                <span class="text-[10px] font-bold uppercase tracking-widest text-red-500">Foul</span>
+            </button>
+            <button onclick="endFrame()" class="flex flex-col items-center justify-center bg-green-900/10 py-5 rounded-2xl border border-green-900/30 active:scale-95 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-1 text-green-500"><path d="m6 9 6 6 6-6"></path></svg>
+                <span class="text-[10px] font-bold uppercase tracking-widest text-green-500">Frame</span>
+            </button>
+        </div>
+
+        <footer class="mt-auto pt-10 text-[10px] text-zinc-600 text-center uppercase tracking-[0.3em] font-bold">
+            Cue Master v1.3 • HTML Static Edition
+        </footer>
+    </div>
+
+    <!-- Foul Modal -->
+    <div id="foul-modal" class="hidden fixed inset-0 z-[60] bg-black/90 backdrop-blur-md flex items-center justify-center p-6">
+        <div class="bg-zinc-900 w-full max-w-xs rounded-3xl p-6 border border-zinc-800 shadow-2xl">
+            <h2 class="text-xl font-black mb-6 text-center text-red-500 tracking-tight">FOUL PENALTY</h2>
+            <div class="grid grid-cols-2 gap-4">
+                <button onclick="handleFoul(4)" class="bg-zinc-800 hover:bg-zinc-700 py-5 rounded-2xl text-3xl font-black border border-zinc-700/50">4</button>
+                <button onclick="handleFoul(5)" class="bg-zinc-800 hover:bg-zinc-700 py-5 rounded-2xl text-3xl font-black border border-zinc-700/50">5</button>
+                <button onclick="handleFoul(6)" class="bg-zinc-800 hover:bg-zinc-700 py-5 rounded-2xl text-3xl font-black border border-zinc-700/50">6</button>
+                <button onclick="handleFoul(7)" class="bg-zinc-800 hover:bg-zinc-700 py-5 rounded-2xl text-3xl font-black border border-zinc-700/50">7</button>
+            </div>
+            <button onclick="toggleFoulMenu(false)" class="w-full mt-6 text-zinc-500 py-2 font-bold uppercase text-xs tracking-widest">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        // --- Game State ---
+        const BALL_VALUES = { red: 1, yellow: 2, green: 3, brown: 4, blue: 5, pink: 6, black: 7 };
+        const COLOR_ORDER = ['yellow', 'green', 'brown', 'blue', 'pink', 'black'];
+
+        let state = {
+            gameStarted: false,
+            redConfig: 15,
+            players: [
+                { name: "Player 1", score: 0, frames: 0 },
+                { name: "Player 2", score: 0, frames: 0 }
+            ],
+            activeIdx: 0,
+            redsLeft: 15,
+            phase: 'red', // red, color, clear-yellow, etc.
+            currentBreak: 0,
+            ptsOnTable: 147
+        };
+
+        let history = [];
+
+        // --- Core Functions ---
+
+        function setFormat(n) {
+            state.redConfig = n;
+            document.getElementById('btn-15').className = n === 15 ? 'py-4 rounded-2xl font-bold transition-all border-2 bg-zinc-800 border-green-500 text-white' : 'py-4 rounded-2xl font-bold transition-all border-2 bg-zinc-900/50 border-zinc-800 text-zinc-500';
+            document.getElementById('btn-10').className = n === 10 ? 'py-4 rounded-2xl font-bold transition-all border-2 bg-zinc-800 border-green-500 text-white' : 'py-4 rounded-2xl font-bold transition-all border-2 bg-zinc-900/50 border-zinc-800 text-zinc-500';
+        }
+
+        function startGame() {
+            state.players[0].name = document.getElementById('p1-input').value || "Player 1";
+            state.players[1].name = document.getElementById('p2-input').value || "Player 2";
+            state.redsLeft = state.redConfig;
+            state.phase = 'red';
+            state.currentBreak = 0;
+            state.gameStarted = true;
+            
+            document.getElementById('setup-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.remove('hidden');
+            updateUI();
+        }
+
+        function saveHistory() {
+            history.push(JSON.parse(JSON.stringify(state)));
+            if (history.length > 50) history.shift();
+        }
+
+        function handleUndo() {
+            if (history.length === 0) return;
+            state = history.pop();
+            updateUI();
+        }
+
+        function handlePot(ball) {
+            saveHistory();
+            const val = BALL_VALUES[ball];
+            state.players[state.activeIdx].score += val;
+            state.currentBreak += val;
+
+            if (state.phase === 'red') {
+                state.redsLeft--;
+                state.phase = 'color';
+            } else if (state.phase === 'color') {
+                state.phase = state.redsLeft > 0 ? 'red' : 'clear-yellow';
+            } else if (state.phase.startsWith('clear-')) {
+                const currentColor = state.phase.replace('clear-', '');
+                const idx = COLOR_ORDER.indexOf(currentColor);
+                if (idx < COLOR_ORDER.length - 1) {
+                    state.phase = `clear-${COLOR_ORDER[idx+1]}`;
+                } else {
+                    state.phase = 'end';
+                }
+            }
+            updateUI();
+        }
+
+        function handleMiss() {
+            saveHistory();
+            state.currentBreak = 0;
+            state.activeIdx = state.activeIdx === 0 ? 1 : 0;
+            if (state.phase === 'color' && state.redsLeft > 0) state.phase = 'red';
+            updateUI();
+        }
+
+        function handleFoul(pts) {
+            saveHistory();
+            const opponentIdx = state.activeIdx === 0 ? 1 : 0;
+            state.players[opponentIdx].score += pts;
+            state.currentBreak = 0;
+            state.activeIdx = opponentIdx;
+            if (state.phase === 'color' && state.redsLeft > 0) state.phase = 'red';
+            toggleFoulMenu(false);
+            updateUI();
+        }
+
+        function resetFrame() {
+            if (!confirm("Reset score for this frame?")) return;
+            saveHistory();
+            state.players[0].score = 0;
+            state.players[1].score = 0;
+            state.redsLeft = state.redConfig;
+            state.phase = 'red';
+            state.currentBreak = 0;
+            updateUI();
+        }
+
+        function endFrame() {
+            const winner = state.players[0].score > state.players[1].score ? 0 : 1;
+            state.players[winner].frames++;
+            state.players[0].score = 0;
+            state.players[1].score = 0;
+            state.redsLeft = state.redConfig;
+            state.phase = 'red';
+            state.currentBreak = 0;
+            state.activeIdx = winner; // Winner breaks off
+            updateUI();
+        }
+
+        function setActivePlayer(idx) {
+            if (state.activeIdx === idx) return;
+            saveHistory();
+            state.activeIdx = idx;
+            state.currentBreak = 0;
+            updateUI();
+        }
+
+        function toggleFoulMenu(show) {
+            document.getElementById('foul-modal').classList.toggle('hidden', !show);
+        }
+
+        // --- UI Updates ---
+
+        function updateUI() {
+            // Player Display
+            document.getElementById('p1-name-display').innerText = state.players[0].name;
+            document.getElementById('p2-name-display').innerText = state.players[1].name;
+            document.getElementById('p1-score').innerText = state.players[0].score;
+            document.getElementById('p2-score').innerText = state.players[1].score;
+            
+            // Format
+            document.getElementById('format-display').innerText = `${state.redConfig} REDS`;
+
+            // Frame dots
+            renderFrames('p1-frames', state.players[0].frames);
+            renderFrames('p2-frames', state.players[1].frames);
+
+            // Active Card Styling
+            const p1c = document.getElementById('p1-card');
+            const p2c = document.getElementById('p2-card');
+            p1c.className = `p-6 rounded-3xl border-2 transition-all ${state.activeIdx === 0 ? 'bg-zinc-900 border-green-500 active-glow' : 'bg-zinc-900/50 border-zinc-800 opacity-60'}`;
+            p2c.className = `p-6 rounded-3xl border-2 transition-all ${state.activeIdx === 1 ? 'bg-zinc-900 border-green-500 active-glow' : 'bg-zinc-900/50 border-zinc-800 opacity-60'}`;
+
+            // Breaks
+            const b1 = document.getElementById('p1-break');
+            const b2 = document.getElementById('p2-break');
+            b1.innerText = `Break: ${state.currentBreak}`;
+            b2.innerText = `Break: ${state.currentBreak}`;
+            b1.classList.toggle('hidden', state.activeIdx !== 0 || state.currentBreak === 0);
+            b2.classList.toggle('hidden', state.activeIdx !== 1 || state.currentBreak === 0);
+
+            // Table Info
+            document.getElementById('reds-count').innerText = state.redsLeft;
+            document.getElementById('target-ball').innerText = state.phase === 'color' ? 'ANY COLOR' : state.phase.replace('clear-', '');
+            
+            // Pts Remaining Calculation
+            let rem = 0;
+            if (state.redsLeft > 0) {
+                rem = (state.redsLeft * 8) + 27;
+            } else {
+                const clearColor = state.phase.replace('clear-', '');
+                const cIdx = COLOR_ORDER.indexOf(clearColor);
+                if (cIdx !== -1) {
+                    for(let i=cIdx; i<COLOR_ORDER.length; i++) rem += BALL_VALUES[COLOR_ORDER[i]];
+                } else if (state.phase === 'color') {
+                    rem = 34; // One color (7) + all colors (27)
+                }
+            }
+            document.getElementById('pts-table').innerText = rem;
+
+            // Ball Enabler
+            updateBallButtons();
+        }
+
+        function renderFrames(id, count) {
+            const el = document.getElementById(id);
+            el.innerHTML = '';
+            for(let i=0; i<count; i++) {
+                const dot = document.createElement('div');
+                dot.className = "w-2 h-2 rounded-full bg-yellow-500";
+                el.appendChild(dot);
+            }
+        }
+
+        function updateBallButtons() {
+            const isRedPhase = state.phase === 'red';
+            const isColorPhase = state.phase === 'color';
+            const clearingColor = state.phase.startsWith('clear-') ? state.phase.replace('clear-', '') : null;
+
+            // Red Button
+            setBallEnabled('ball-red', state.redsLeft > 0 && (isRedPhase || isColorPhase));
+            
+            // Colors
+            COLOR_ORDER.forEach(color => {
+                let enabled = false;
+                if (isColorPhase) enabled = true;
+                if (clearingColor === color) enabled = true;
+                setBallEnabled(`ball-${color}`, enabled);
+            });
+            
+            // Special Case: Black (it's in the loop above)
+        }
+
+        function setBallEnabled(id, enabled) {
+            const el = document.getElementById(id);
+            el.disabled = !enabled;
+            el.style.opacity = enabled ? "1" : "0.1";
+            el.style.filter = enabled ? "none" : "grayscale(1)";
+        }
+
+    </script>
+</body>
+</html>
+
+```
