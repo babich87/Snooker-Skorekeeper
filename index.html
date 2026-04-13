@@ -12,8 +12,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Cue Master">
     
-    <!-- Manifest Link (Base64 encoded for single-file portability) -->
-    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkN1ZSBNYXN0ZXIgU25vb2tlciIsCiAgInNob3J0X25hbWUiOiAiQ3VlIE1hc3RlciIsCiAgInN0YXJ0X3VybCI6ICIuIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjMDkwOTBiIiwKICAidGhlbWVfY29sb3IiOiAiIzA5MDkwYiIsCiAgImljb25zIjogWwogICAgewogICAgICAic3JjIjogImRhdGE6aW1hZ2Uvc25nO2Jhc2U2NCxpVkJPUncwS0dnb0FBQUFOU1VoRVVnQUFBRGdBQUFBeUNBWUFBQUJlTm84cUFBQUFCMmRsVndBQUFBQUFBQUFBQUFBQUFBQUFBQUFBYm93VEFBQUFBRmxmUVZSNFp1M1NQdzBBQUFBa0pSRlpUd0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBRm9iNEFBQUFBRWwwUlZIREFBQUFBQkpSVTVFcmtKZ2dnPT0iLAogICAgICAic2l6ZXMiOiAiMTkyeDE5MiIsCiAgICAgICJ0eXBlIjogImltYWdlL3BuZyIKICAgIH0KICBdCn0=">
+    <!-- Manifest Link (Includes start_url fix for GitHub Pages) -->
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkN1ZSBNYXN0ZXIgU25vb2tlciIsCiAgInNob3J0X25hbWUiOiAiQ3VlIE1hc3RlciIsCiAgInN0YXJ0X3VybCI6ICIuL2luZGV4Lmh0bWwiLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwOTA5MGIiLAogICJ0aGVtZV9jb2xvciI6ICIjMDkwOTBiIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zbmc7YmFzZTY0LGlWQk9SdzBLR2dvQUFBQU5TVWhFVWdBQUFEY0FBQUF5Q0FZQUFBQmVObzhxQUFBQUIyZGxWd0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBYm93VEFBQUFBRmxmUVZSNFp1M1NQdzBBQUFBa0pSRlpUd0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBRm9iNEFBQUFBRWwwUlZIREFBQUFBQkpSVTVFcmtKZ2dnPT0iLAogICAgICAic2l6ZXMiOiAiMTkyeDE5MiIsCiAgICAgICJ0eXBlIjogImltYWdlL3BuZyIKICAgIH0KICBdCn0=">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -25,7 +25,6 @@
         }
         .ball-shadow { box-shadow: inset -4px -4px 8px rgba(0,0,0,0.4), 0 4px 10px rgba(0,0,0,0.3); }
         .active-glow { box-shadow: 0 0 20px rgba(34, 197, 94, 0.3); }
-        /* Hide scrollbar for PWA feel */
         ::-webkit-scrollbar { display: none; }
     </style>
 </head>
@@ -37,11 +36,11 @@
             <div class="bg-green-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>
             </div>
-            <h1 class="text-3xl font-black text-center mb-8 tracking-tight">CUE MASTER</h1>
+            <h1 class="text-3xl font-black text-center mb-8 tracking-tight italic">CUE MASTER</h1>
             
             <div class="space-y-6">
                 <div>
-                    <label class="text-[10px] text-zinc-500 uppercase font-bold tracking-widest block mb-3 text-center">Game Mode</label>
+                    <label class="text-[10px] text-zinc-500 uppercase font-bold tracking-widest block mb-3 text-center">Format</label>
                     <div class="grid grid-cols-2 gap-3">
                         <button onclick="setFormat(15)" id="btn-15" class="py-4 rounded-2xl font-bold transition-all border-2 bg-zinc-800 border-green-500 text-white">15 REDS</button>
                         <button onclick="setFormat(10)" id="btn-10" class="py-4 rounded-2xl font-bold transition-all border-2 bg-zinc-900/50 border-zinc-800 text-zinc-500">10 REDS</button>
@@ -59,22 +58,22 @@
             </div>
         </div>
 
-        <!-- Install Button (Hidden by default) -->
-        <button id="install-btn" class="hidden mt-8 flex items-center gap-2 bg-white/10 hover:bg-white/20 px-6 py-3 rounded-full text-sm font-bold border border-white/10 transition-all">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-            Install App
+        <!-- Enhanced Install Button -->
+        <button id="install-btn" class="hidden mt-8 flex items-center gap-2 bg-white/5 hover:bg-white/10 px-8 py-4 rounded-full text-sm font-bold border border-white/10 transition-all active:scale-95">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-500"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            Add to Home Screen
         </button>
     </div>
 
     <!-- MAIN GAME INTERFACE -->
-    <div id="game-screen" class="hidden max-w-2xl mx-auto p-4 flex flex-col flex-1">
+    <div id="game-screen" class="hidden max-w-2xl mx-auto p-4 flex flex-col flex-1 w-full">
         <!-- Header -->
         <header class="flex justify-between items-center mb-6">
             <div class="flex items-center gap-2">
                 <div class="bg-green-600 p-2 rounded-lg"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg></div>
-                <span id="format-display" class="font-bold text-xs text-zinc-400 uppercase tracking-widest"></span>
+                <span id="format-display" class="font-bold text-xs text-zinc-500 uppercase tracking-widest"></span>
             </div>
-            <div class="flex gap-2">
+            <div class="flex gap-1 sm:gap-2">
                 <button onclick="location.reload()" class="p-2 hover:bg-zinc-800 rounded-full" title="New Game"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-500"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.15.09a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg></button>
                 <button onclick="handleUndo()" class="p-2 hover:bg-zinc-800 rounded-full" title="Undo"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-500"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg></button>
                 <button onclick="resetFrame()" class="p-2 hover:bg-zinc-800 rounded-full" title="Reset Frame"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-500/70"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M3 21v-5h5"></path></svg></button>
@@ -145,7 +144,7 @@
         </div>
 
         <footer class="mt-auto pt-10 pb-4 text-[10px] text-zinc-600 text-center uppercase tracking-[0.3em] font-bold">
-            Cue Master v1.4 • PWA Edition
+            Cue Master v1.4.2 • GitHub Ready
         </footer>
     </div>
 
@@ -164,6 +163,35 @@
     </div>
 
     <script>
+        /**
+         * PWA SERVICE WORKER REGISTRATION
+         * Attempts to register a worker from a Blob to satisfy browser requirements 
+         * while keeping the app as a single file.
+         */
+        const swSource = `
+            self.addEventListener('install', (e) => self.skipWaiting());
+            self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
+            self.addEventListener('fetch', (e) => {
+                // No-op fetch to satisfy Chrome's PWA install criteria
+            });
+        `;
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                const blob = new Blob([swSource], { type: 'text/javascript' });
+                const swUrl = URL.createObjectURL(blob);
+                
+                // Note: On some strict environments (like GitHub Pages on Safari), 
+                // registering from a Blob might fail. In that case, creating a 
+                // physical 'sw.js' file in your repo is the best solution.
+                navigator.serviceWorker.register(swUrl).catch(err => {
+                    console.log('SW registration failed (likely due to single-file restriction):', err);
+                    // Fallback: Try to register a physical file if the user followed the manual step
+                    navigator.serviceWorker.register('sw.js').catch(() => {});
+                });
+            });
+        }
+
         // --- PWA Installation Logic ---
         let deferredPrompt;
         const installBtn = document.getElementById('install-btn');
