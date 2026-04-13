@@ -11,51 +11,10 @@
   "categories": ["games", "sports"],
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/3408/3408506.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "https://cdn-icons-png.flaticon.com/512/3408/3408506.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "https://cdn-icons-png.flaticon.com/512/3408/3408506.png",
+      "src": "./icon.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "New Match",
-      "short_name": "New Match",
-      "description": "Start a new snooker match",
-      "url": "./index.html?mode=new",
-      "icons": [
-        {
-          "src": "https://cdn-icons-png.flaticon.com/512/3408/3408506.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "https://cdn-icons-png.flaticon.com/512/3408/3408506.png",
-      "sizes": "540x720",
-      "type": "image/png",
-      "form_factor": "narrow"
-    },
-    {
-      "src": "https://cdn-icons-png.flaticon.com/512/3408/3408506.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide"
     }
   ]
 }
