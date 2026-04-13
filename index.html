@@ -1,20 +1,31 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Cue Master - Snooker Scorekeeper</title>
     
-    <!-- PWA Meta Tags -->
+    <!-- PWA Meta Tags for iOS -->
     <meta name="theme-color" content="#09090b">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Cue Master">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3408/3408506.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="https://cdn-icons-png.flaticon.com/512/3408/3408506.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="https://cdn-icons-png.flaticon.com/512/3408/3408506.png">    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
     
-    <!-- Manifest Link (Includes start_url fix for GitHub Pages) -->
-    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkN1ZSBNYXN0ZXIgU25vb2tlciIsCiAgInNob3J0X25hbWUiOiAiQ3VlIE1hc3RlciIsCiAgInN0YXJ0X3VybCI6ICIuL2luZGV4Lmh0bWwiLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwOTA5MGIiLAogICJ0aGVtZV9jb2xvciI6ICIjMDkwOTBiIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zbmc7YmFzZTY0LGlWQk9SdzBLR2dvQUFBQU5TVWhFVWdBQUFEY0FBQUF5Q0FZQUFBQmVObzhxQUFBQUIyZGxWd0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBYm93VEFBQUFBRmxmUVZSNFp1M1NQdzBBQUFBa0pSRlpUd0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBRm9iNEFBQUFBRWwwUlZIREFBQUFBQkpSVTVFcmtKZ2dnPT0iLAogICAgICAic2l6ZXMiOiAiMTkyeDE5MiIsCiAgICAgICJ0eXBlIjogImltYWdlL3BuZyIKICAgIH0KICBdCn0=">
-
+    <!-- Android Chrome Meta Tags -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Cue Master">
+    
+    <!-- Prevent iOS Safari from scaling -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+    
+    <!-- Full screen mode on iPhone X and later -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
@@ -22,10 +33,28 @@
             font-family: 'Inter', sans-serif; 
             -webkit-tap-highlight-color: transparent;
             overscroll-behavior: none;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        html {
+            position: fixed;
+            width: 100%;
+            height: 100%;
         }
         .ball-shadow { box-shadow: inset -4px -4px 8px rgba(0,0,0,0.4), 0 4px 10px rgba(0,0,0,0.3); }
         .active-glow { box-shadow: 0 0 20px rgba(34, 197, 94, 0.3); }
         ::-webkit-scrollbar { display: none; }
+        /* iOS safe area padding */
+        @supports(padding: max(0px)) {
+            body {
+                padding-left: max(12px, env(safe-area-inset-left));
+                padding-right: max(12px, env(safe-area-inset-right));
+                padding-top: max(12px, env(safe-area-inset-top));
+                padding-bottom: max(12px, env(safe-area-inset-bottom));
+            }
+        }
     </style>
 </head>
 <body class="bg-zinc-950 text-slate-100 min-h-screen flex flex-col">
@@ -34,7 +63,7 @@
     <div id="setup-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center p-6 bg-zinc-950">
         <div class="w-full max-w-sm bg-zinc-900 rounded-3xl p-8 border border-zinc-800 shadow-2xl">
             <div class="bg-green-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
             </div>
             <h1 class="text-3xl font-black text-center mb-8 tracking-tight italic">CUE MASTER</h1>
             
@@ -48,8 +77,8 @@
                 </div>
 
                 <div class="space-y-3">
-                    <input type="text" id="p1-input" placeholder="Player 1" class="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-green-500" value="Player 1">
-                    <input type="text" id="p2-input" placeholder="Player 2" class="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-green-500" value="Player 2">
+                    <input type="text" id="p1-input" placeholder="Player 1" class="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-green-500">
+                    <input type="text" id="p2-input" placeholder="Player 2" class="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-green-500">
                 </div>
 
                 <button onclick="startGame()" class="w-full bg-green-600 hover:bg-green-500 py-4 rounded-2xl font-black text-lg tracking-wide shadow-lg transition-all active:scale-95">
@@ -60,7 +89,7 @@
 
         <!-- Enhanced Install Button -->
         <button id="install-btn" class="hidden mt-8 flex items-center gap-2 bg-white/5 hover:bg-white/10 px-8 py-4 rounded-full text-sm font-bold border border-white/10 transition-all active:scale-95">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-500"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download"><polyline points="8 17 12 21 16 17"></polyline><line x1="12" y1="12" x2="12" y2="21"></line><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"></path></svg>
             Add to Home Screen
         </button>
     </div>
@@ -70,13 +99,13 @@
         <!-- Header -->
         <header class="flex justify-between items-center mb-6">
             <div class="flex items-center gap-2">
-                <div class="bg-green-600 p-2 rounded-lg"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg></div>
+                <div class="bg-green-600 p-2 rounded-lg"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></div>
                 <span id="format-display" class="font-bold text-xs text-zinc-500 uppercase tracking-widest"></span>
             </div>
             <div class="flex gap-1 sm:gap-2">
-                <button onclick="location.reload()" class="p-2 hover:bg-zinc-800 rounded-full" title="New Game"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-500"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.15.09a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg></button>
-                <button onclick="handleUndo()" class="p-2 hover:bg-zinc-800 rounded-full" title="Undo"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-500"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg></button>
-                <button onclick="resetFrame()" class="p-2 hover:bg-zinc-800 rounded-full" title="Reset Frame"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-500/70"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M3 21v-5h5"></path></svg></button>
+                <button onclick="location.reload()" class="p-2 hover:bg-zinc-800 rounded-full" title="New Game"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2-8.83"></path></svg></button>
+                <button onclick="handleUndo()" class="p-2 hover:bg-zinc-800 rounded-full" title="Undo"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"></path><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"></path></svg></button>
+                <button onclick="resetFrame()" class="p-2 hover:bg-zinc-800 rounded-full" title="Reset Frame"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></button>
             </div>
         </header>
 
@@ -118,33 +147,33 @@
 
         <!-- Balls Grid -->
         <div class="grid grid-cols-4 sm:grid-cols-7 gap-3 sm:gap-4 mb-12">
-            <button onclick="handlePot('red')" id="ball-red" class="ball-shadow bg-red-600 w-full aspect-square rounded-full flex items-center justify-center font-bold text-white text-xl border-4 border-white/10 active:scale-90 transition-transform">1</button>
-            <button onclick="handlePot('yellow')" id="ball-yellow" class="ball-shadow bg-yellow-400 w-full aspect-square rounded-full flex items-center justify-center font-bold text-zinc-900 text-xl border-4 border-white/10 active:scale-90 transition-transform">2</button>
-            <button onclick="handlePot('green')" id="ball-green" class="ball-shadow bg-green-600 w-full aspect-square rounded-full flex items-center justify-center font-bold text-white text-xl border-4 border-white/10 active:scale-90 transition-transform">3</button>
-            <button onclick="handlePot('brown')" id="ball-brown" class="ball-shadow bg-amber-800 w-full aspect-square rounded-full flex items-center justify-center font-bold text-white text-xl border-4 border-white/10 active:scale-90 transition-transform">4</button>
-            <button onclick="handlePot('blue')" id="ball-blue" class="ball-shadow bg-blue-600 w-full aspect-square rounded-full flex items-center justify-center font-bold text-white text-xl border-4 border-white/10 active:scale-90 transition-transform">5</button>
-            <button onclick="handlePot('pink')" id="ball-pink" class="ball-shadow bg-pink-400 w-full aspect-square rounded-full flex items-center justify-center font-bold text-white text-xl border-4 border-white/10 active:scale-90 transition-transform">6</button>
-            <button onclick="handlePot('black')" id="ball-black" class="ball-shadow bg-zinc-900 w-full aspect-square rounded-full flex items-center justify-center font-bold text-white text-xl border-4 border-white/10 active:scale-90 transition-transform">7</button>
+            <button ontouchstart="" onclick="handlePot('red')" id="ball-red" class="ball-shadow bg-red-600 w-full aspect-square rounded-full flex items-center justify-center font-bold text-white text-xl border-4 border-red-900 transition-all active:scale-90">R</button>
+            <button ontouchstart="" onclick="handlePot('yellow')" id="ball-yellow" class="ball-shadow bg-yellow-400 w-full aspect-square rounded-full flex items-center justify-center font-bold text-zinc-900 text-xl border-4 border-yellow-600 transition-all active:scale-90">Y</button>
+            <button ontouchstart="" onclick="handlePot('green')" id="ball-green" class="ball-shadow bg-green-600 w-full aspect-square rounded-full flex items-center justify-center font-bold text-white text-xl border-4 border-green-800 transition-all active:scale-90">G</button>
+            <button ontouchstart="" onclick="handlePot('brown')" id="ball-brown" class="ball-shadow bg-amber-800 w-full aspect-square rounded-full flex items-center justify-center font-bold text-white text-xl border-4 border-amber-900 transition-all active:scale-90">Br</button>
+            <button ontouchstart="" onclick="handlePot('blue')" id="ball-blue" class="ball-shadow bg-blue-600 w-full aspect-square rounded-full flex items-center justify-center font-bold text-white text-xl border-4 border-blue-900 transition-all active:scale-90">B</button>
+            <button ontouchstart="" onclick="handlePot('pink')" id="ball-pink" class="ball-shadow bg-pink-400 w-full aspect-square rounded-full flex items-center justify-center font-bold text-white text-xl border-4 border-pink-600 transition-all active:scale-90">P</button>
+            <button ontouchstart="" onclick="handlePot('black')" id="ball-black" class="ball-shadow bg-zinc-900 w-full aspect-square rounded-full flex items-center justify-center font-bold text-white text-xl border-4 border-zinc-800 transition-all active:scale-90">Bk</button>
         </div>
 
         <!-- Action Buttons -->
         <div class="grid grid-cols-3 gap-4 w-full">
-            <button onclick="handleMiss()" class="flex flex-col items-center justify-center bg-zinc-800/80 py-5 rounded-2xl border border-zinc-700/50 active:scale-95 transition-all">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-1 text-zinc-400"><path d="m15 18-6-6 6-6"></path></svg>
+            <button ontouchstart="" onclick="handleMiss()" class="flex flex-col items-center justify-center bg-zinc-800/80 py-5 rounded-2xl border border-zinc-700/50 active:scale-95 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
                 <span class="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Miss</span>
             </button>
-            <button onclick="toggleFoulMenu(true)" class="flex flex-col items-center justify-center bg-red-900/10 py-5 rounded-2xl border border-red-900/30 active:scale-95 transition-all">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-1 text-red-500"><circle cx="12" cy="12" r="10"></circle><line x1="12" x2="12" y1="8" y2="12"></line><line x1="12" x2="12.01" y1="16" y2="16"></line></svg>
+            <button ontouchstart="" onclick="toggleFoulMenu(true)" class="flex flex-col items-center justify-center bg-red-900/10 py-5 rounded-2xl border border-red-900/30 active:scale-95 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
                 <span class="text-[10px] font-bold uppercase tracking-widest text-red-500">Foul</span>
             </button>
-            <button onclick="endFrame()" class="flex flex-col items-center justify-center bg-green-900/10 py-5 rounded-2xl border border-green-900/30 active:scale-95 transition-all">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-1 text-green-500"><path d="m6 9 6 6 6-6"></path></svg>
+            <button ontouchstart="" onclick="endFrame()" class="flex flex-col items-center justify-center bg-green-900/10 py-5 rounded-2xl border border-green-900/30 active:scale-95 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
                 <span class="text-[10px] font-bold uppercase tracking-widest text-green-500">Frame</span>
             </button>
         </div>
 
         <footer class="mt-auto pt-10 pb-4 text-[10px] text-zinc-600 text-center uppercase tracking-[0.3em] font-bold">
-            Cue Master v1.4.2 • GitHub Ready
+            Cue Master v1.5.0 • Mobile Ready
         </footer>
     </div>
 
@@ -153,42 +182,29 @@
         <div class="bg-zinc-900 w-full max-w-xs rounded-3xl p-6 border border-zinc-800 shadow-2xl">
             <h2 class="text-xl font-black mb-6 text-center text-red-500 tracking-tight">FOUL PENALTY</h2>
             <div class="grid grid-cols-2 gap-4">
-                <button onclick="handleFoul(4)" class="bg-zinc-800 hover:bg-zinc-700 py-5 rounded-2xl text-3xl font-black border border-zinc-700/50">4</button>
-                <button onclick="handleFoul(5)" class="bg-zinc-800 hover:bg-zinc-700 py-5 rounded-2xl text-3xl font-black border border-zinc-700/50">5</button>
-                <button onclick="handleFoul(6)" class="bg-zinc-800 hover:bg-zinc-700 py-5 rounded-2xl text-3xl font-black border border-zinc-700/50">6</button>
-                <button onclick="handleFoul(7)" class="bg-zinc-800 hover:bg-zinc-700 py-5 rounded-2xl text-3xl font-black border border-zinc-700/50">7</button>
+                <button ontouchstart="" onclick="handleFoul(4)" class="bg-zinc-800 hover:bg-zinc-700 py-5 rounded-2xl text-3xl font-black border border-zinc-700/50 active:scale-95 transition-all">4</button>
+                <button ontouchstart="" onclick="handleFoul(5)" class="bg-zinc-800 hover:bg-zinc-700 py-5 rounded-2xl text-3xl font-black border border-zinc-700/50 active:scale-95 transition-all">5</button>
+                <button ontouchstart="" onclick="handleFoul(6)" class="bg-zinc-800 hover:bg-zinc-700 py-5 rounded-2xl text-3xl font-black border border-zinc-700/50 active:scale-95 transition-all">6</button>
+                <button ontouchstart="" onclick="handleFoul(7)" class="bg-zinc-800 hover:bg-zinc-700 py-5 rounded-2xl text-3xl font-black border border-zinc-700/50 active:scale-95 transition-all">7</button>
             </div>
-            <button onclick="toggleFoulMenu(false)" class="w-full mt-6 text-zinc-500 py-2 font-bold uppercase text-xs tracking-widest">Cancel</button>
+            <button onclick="toggleFoulMenu(false)" class="w-full mt-6 text-zinc-500 py-2 font-bold uppercase text-xs tracking-widest active:scale-95 transition-all">Cancel</button>
         </div>
     </div>
 
     <script>
         /**
          * PWA SERVICE WORKER REGISTRATION
-         * Attempts to register a worker from a Blob to satisfy browser requirements 
-         * while keeping the app as a single file.
+         * Registers a proper service worker for offline functionality
          */
-        const swSource = `
-            self.addEventListener('install', (e) => self.skipWaiting());
-            self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
-            self.addEventListener('fetch', (e) => {
-                // No-op fetch to satisfy Chrome's PWA install criteria
-            });
-        `;
-
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                const blob = new Blob([swSource], { type: 'text/javascript' });
-                const swUrl = URL.createObjectURL(blob);
-                
-                // Note: On some strict environments (like GitHub Pages on Safari), 
-                // registering from a Blob might fail. In that case, creating a 
-                // physical 'sw.js' file in your repo is the best solution.
-                navigator.serviceWorker.register(swUrl).catch(err => {
-                    console.log('SW registration failed (likely due to single-file restriction):', err);
-                    // Fallback: Try to register a physical file if the user followed the manual step
-                    navigator.serviceWorker.register('sw.js').catch(() => {});
-                });
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => {
+                        console.log('✅ Service Worker registered successfully!', reg);
+                    })
+                    .catch(err => {
+                        console.log('❌ Service Worker registration failed:', err);
+                    });
             });
         }
 
@@ -200,14 +216,22 @@
             e.preventDefault();
             deferredPrompt = e;
             installBtn.classList.remove('hidden');
+            console.log('✅ Install prompt available');
         });
 
         installBtn.addEventListener('click', async () => {
             if (!deferredPrompt) return;
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
+            console.log(`User response to install prompt: ${outcome}`);
             if (outcome === 'accepted') installBtn.classList.add('hidden');
             deferredPrompt = null;
+        });
+
+        // Handle app installed event
+        window.addEventListener('appinstalled', () => {
+            console.log('✅ App was installed!');
+            installBtn.classList.add('hidden');
         });
 
         // --- Game Logic ---
@@ -371,7 +395,7 @@
             if (state.phase === 'red') targetText = "RED";
             else if (state.phase === 'color') targetText = "ANY COLOR";
             else if (state.phase === 'end') targetText = "FRAME OVER";
-            else targetText = state.phase.replace('clear-', '');
+            else targetText = state.phase.replace('clear-', '').toUpperCase();
             
             document.getElementById('target-ball').innerText = targetText;
             
@@ -424,5 +448,3 @@
     </script>
 </body>
 </html>
-
-```
