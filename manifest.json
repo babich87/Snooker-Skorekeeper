@@ -1,0 +1,16 @@
+{
+  "name": "Cue Master Snooker",
+  "short_name": "Cue Master",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#09090b",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3408/3408506.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
