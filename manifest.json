@@ -2,6 +2,7 @@
   "name": "Cue Master Snooker",
   "short_name": "Cue Master",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#09090b",
   "theme_color": "#09090b",
@@ -12,5 +13,7 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "orientation": "portrait-primary",
+  "categories": ["games", "sports"]
 }
